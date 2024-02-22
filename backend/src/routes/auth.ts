@@ -7,7 +7,7 @@ import verifyToken from '../middleware/auth';
 
 const router = express.Router();
 router.post("/login", [check("email", "Email is required").isEmail(),
-check("password", "Passworf with 6 or more characters required").isLength({ min: 6 }),
+check("password", "Password with 6 or more characters required").isLength({ min: 6 }),
 ], async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -46,6 +46,12 @@ check("password", "Passworf with 6 or more characters required").isLength({ min:
 
 router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
     res.status(200).send({ userId: req.userId });
+});
+
+router.post("/logout", (req: Request, res: Response) => {
+    res.cookie("auth_token", "", {
+        expires: new Date(0),
+    })
 })
 
 export default router;
