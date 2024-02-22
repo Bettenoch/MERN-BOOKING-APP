@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
+
+import { useAppContext } from "../contexts/AppContext";
 import * as apiClient from '../api-client';
 
 export type SignInFormData = {
@@ -8,13 +10,14 @@ export type SignInFormData = {
 }
 
 const SignIn = () => {
+    const { showToast } = useAppContext();
     const { register, handleSubmit, formState:{errors} } = useForm<SignInFormData>();
     const mutation = useMutation(apiClient.signIn, {
         onSuccess: () => {
             console.log("User signed In")
         },
         onError: (error: Error)=> {
-            console.log("User not signed In")
+            showToast({ message: error.message, type: "ERROR" });
         }
     });
 
